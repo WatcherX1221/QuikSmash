@@ -27,7 +27,7 @@ public class SRGrapple : MonoBehaviour
         distanceToCursorPoint = Vector2.Distance(transform.position, sugarRush.GetComponent<SugarRush>().cursorWorldPos);
         if(!grappleAnchored)
         {
-            Vector2 grappleMovement = Vector2.MoveTowards(transform.position, sugarRush.GetComponent<SugarRush>().cursorWorldPos, Time.deltaTime * 5);
+            Vector2 grappleMovement = Vector2.MoveTowards(transform.position, sugarRush.GetComponent<SugarRush>().cursorWorldPos, Time.deltaTime * 10);
             transform.position = grappleMovement;
         }
         if(grappleAnchored)
@@ -60,6 +60,5 @@ public class SRGrapple : MonoBehaviour
         sugarRush.GetComponent<SugarRush>().usingGrapple = false;
         sugarRush.GetComponent<Collider2D>().layerOverridePriority = -1;
         sugarRush.GetComponent<Rigidbody2D>().velocity = new Vector2(sugarRush.GetComponent<Rigidbody2D>().velocity.x, 4f);
-        sugarRush.GetComponent<BasicMovement>().addedForce = new Vector2(7f, 0f);
     }
 }

@@ -1,63 +1,38 @@
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class AbilityFunctions : MonoBehaviour
 {
     public GameObject player;
+    public GameObject defaultHitbox;
     MainMovement mainmovement;
+    public enum HitboxTypes
+    {
+        Blast,
+        Grab
+    }
+
     // Timers variables
-    [SerializeField]
-    float solarPunchWindup = 1f;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         mainmovement = player.GetComponent<MainMovement>();
-        solarPunchWindup = 1f;
+    }
+    private void Update()
+    {
+        HitboxSpawn(HitboxTypes.Grab, 0.25f, new Vector2(2f, 1f), new Vector2(1f, 1f));
     }
 
-    public void SolarPunch(int playerDirection, Transform playerPosition)
+    public void HitboxSpawn(HitboxTypes hitboxType, float time, Vector2 position, Vector2 size, GameObject hitboxShape = null)
     {
-         
-        if(solarPunchWindup > 0f)
+        if (hitboxShape == null)
         {
-            AbilityTimerInfo("SolarPunch", playerDirection, playerPosition);
-            player.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0f, 0f);
-            player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-            mainmovement.move.Disable();
-            if(mainmovement.jump.IsPressed())
-            {
-                solarPunchWindup = 1f;
-                mainmovement.move.Enable();
-            }
+            hitboxShape = defaultHitbox;
         }
-        else
-        {
-            GameObject hitboxObject = Resources.Load<GameObject>("Hitboxes/CircleHitbox");
-            float hitboxDistance = 2.5f;
-            Vector2 hitboxPosition = new Vector2(playerPosition.position.x + (playerDirection * hitboxDistance), playerPosition.position.y);
-            GameObject hitbox = Instantiate(hitboxObject, hitboxPosition, transform.rotation);
-            Destroy(hitbox, 0.25f);
-            solarPunchWindup = 1f;
-        }
-        
-    }
-
-    public void AbilityTimerInfo(string abilityName, int playerDirection, Transform playerPosition)
-    {
-        Debug.Log("AbilityTimerInfo Called");
-        if(abilityName == "SolarPunch")
-        {
-            Debug.Log("Attack is Solar Punch");
-            if(solarPunchWindup > 0)
-            {
-                Debug.Log("Started changing value");
-                solarPunchWindup -= Time.deltaTime;
-                SolarPunch(playerDirection, playerPosition);
-                Debug.Log("New time Solar Punch" + solarPunchWindup);
-            }
-        }
+        GameObject newHitbox = Instantiate(hitboxShape, new Vector2(player.transform.position.x + position.x, player.transform.position.y + position.y), transform.rotation, transform.parent);
+        newHitbox.transform.localScale = size;
+        newHitbox.tag = hitboxType.ToString();
     }
 }

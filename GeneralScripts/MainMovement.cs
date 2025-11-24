@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,7 +31,7 @@ public class MainMovement : MonoBehaviour
     {
         // Object referencing
         rb = GetComponent<Rigidbody2D>();
-        abilities = GameObject.FindGameObjectWithTag("AbilityFunctions").GetComponent<AbilityFunctions>();
+        abilities = GetComponent<AbilityFunctions>();
         
         // Value defining
         accelerationCharge = 0;
@@ -109,11 +107,6 @@ public class MainMovement : MonoBehaviour
                 slamCharge = 0f;
                 canSlam = false;
             }
-        }
-        if (ability1.IsPressed() && ability1Cooldown <= 0)
-        {
-            abilities.SolarPunch(movement, gameObject.transform);
-            ability1Cooldown = 2;
         }
     }
     
